@@ -1,0 +1,18 @@
+{
+  "name": "http-api-assignment-2",
+  "version": "1.0.0",
+  "description": "build a simple http api using get, head, and post methods",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"No Tests\""
+  },
+  "author": "Josh Samuel",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.29.1"
+  }
+}

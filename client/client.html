@@ -5,6 +5,111 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const handleResponse = async (response, parseResponse) => {
+      const content = document.querySelector('#content');
+
+      //status code
+      switch(response.status) {
+        case 200: //success
+        
+        content.innerHTML = `<b>Success</b>`;
+       const method = userForm.querySelector('#methodSelect').value;
+       if (method === 'get')
+        {
+        let users = await response.json();
+        content.innerHTML += JSON.stringify(users);
+        }
+       else
+        {
+          content.innerHTML = `<b>Success</b>`;
+        }
+
+        break;
+        case 201: //created
+        content.innerHTML = `<b>Created</b>`;
+        break;
+        case 204: //updated
+        content.innerHTML = `<b>Updated (No Content)</b>`;
+        break;
+        case 400: //bad request
+        content.innerHTML = `<b>Bad Request</b>`;
+        break;
+        case 404: //error 
+        content.innerHTML = `<b>Not Found</b>`;
+        break;
+      }
+
+      //if(parseResponse)
+      //{
+        let obj = await response.json();
+
+        let jsonString = JSON.stringify(obj);
+        content.innerHTML += `<p>${obj.message}</p>`;
+      //}
+      
+
+    };
+
+    const requestUpdate = async (userForm) => {
+      const url = userForm.querySelector('#urlField').value;
+      const method = userForm.querySelector('#methodSelect').value;
+
+      let response = await fetch(url, {
+        method, 
+        headers: {
+          'Accept': 'application/json'
+        },
+      });
+
+      handleResponse(response, method === 'get');
+    };
+
+    const sendPost = async (nameForm) => {
+      const nameAction = nameForm.getAttribute('action');
+      const nameMethod = nameForm.getAttribute('method');
+
+      const nameField = nameForm.querySelector('#nameField');
+      const ageField = nameForm.querySelector('#ageField');
+
+      //Build a data string in the FORM-URLENCODED format.
+      const formData = `name=${nameField.value}&age=${ageField.value}`;
+
+      let response = await fetch(nameAction, {
+        method: nameMethod,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json',
+        },
+        body: formData,
+      });
+
+      handleResponse(response);
+    }
+
+    const init = () => {
+      const userForm = document.querySelector('#userForm');
+      const nameForm = document.querySelector('#nameForm');
+
+       const getUsers = (e) => {
+        e.preventDefault();
+        requestUpdate(userForm);
+        return false;
+      }
+
+      const addUsers = (e) => {
+        e.preventDefault();
+        sendPost(nameForm);
+        return false;
+      }
+
+
+      //add event listener 
+      userForm.addEventListener('submit', getUsers);
+      nameForm.addEventListener('submit', addUsers);
+    };
+
+    window.onload = init;
+
 
   </script>
 </head>
